@@ -22,8 +22,9 @@ namespace Tetracosm_appreciation
     public partial class MainWindow : Window
     {
         TranslateTransform trans = new TranslateTransform();
+        ScaleTransform scale = new ScaleTransform();
         Random random = new Random();
-        int minute = 0;
+        int minute = 9;
         int next_x = 0;
         int next_y = 0;
         bool right = true;
@@ -31,8 +32,9 @@ namespace Tetracosm_appreciation
         {
             InitializeComponent();
             Character.RenderTransform = trans;
+            Character.LayoutTransform = scale;
             System.Windows.Threading.DispatcherTimer Main = new System.Windows.Threading.DispatcherTimer();
-            Main.Tick += Main_Tick;
+            Main.Tick += Move;
             Main.Interval = new TimeSpan(0, 0, 1);
             Main.Start();
         }
@@ -43,28 +45,39 @@ namespace Tetracosm_appreciation
             Activate();
         }
         
-        private void Main_Tick(object sender, EventArgs e)
+        private void Move(object sender, EventArgs e)
         {
             
             display.Content = "X: " + Character.RenderTransform.Value.OffsetX + "\nY: " + Character.RenderTransform.Value.OffsetY;
             minute++;
-            if (minute >= 3)
+            if (minute >= 10)
             {
                 minute = 0;
                 int current_x = (int)Character.RenderTransform.Value.OffsetX;
                 int current_y = (int)Character.RenderTransform.Value.OffsetY;
                 next_x = random.Next((int)ActualHeight - 100);
                 next_y = random.Next((int)ActualWidth - 100);
+                DoubleAnimation anim1 = new DoubleAnimation{
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = next_y,
+                    Duration =  TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                    };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_x,
+                    Duration = TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                }; ;
                 if (current_x<next_x)
                 {
-                    Character.RenderTransform.Value.ScalePrepend(1, 1);
+                    scale.ScaleX = 1;
                 }
                 else
                 {
-                    Character.RenderTransform.Value.ScalePrepend(1, -1);
+                    scale.ScaleX = -1;
                 }
-                DoubleAnimation anim1 = new DoubleAnimation(Character.RenderTransform.Value.OffsetX, next_y, TimeSpan.FromSeconds(3));
-                DoubleAnimation anim2 = new DoubleAnimation(Character.RenderTransform.Value.OffsetY, next_x, TimeSpan.FromSeconds(3));
                 trans.BeginAnimation(TranslateTransform.XProperty, anim1);
                 trans.BeginAnimation(TranslateTransform.YProperty, anim2);
             }
