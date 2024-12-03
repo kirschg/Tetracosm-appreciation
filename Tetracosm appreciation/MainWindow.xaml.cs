@@ -21,8 +21,9 @@ namespace Tetracosm_appreciation
     /// </summary>
     public partial class MainWindow : Window
     {
-        //transforms
         Random random = new Random();
+
+        //transforms
         ScaleTransform scale = new ScaleTransform();
         TranslateTransform trans = new TranslateTransform();
 
@@ -42,6 +43,9 @@ namespace Tetracosm_appreciation
         string animname = "fly";
         int slowmo = 1;
 
+        //debug toggle
+        bool debugOpen = false;
+
         //startup
         public MainWindow()
         {
@@ -56,10 +60,13 @@ namespace Tetracosm_appreciation
             Main.Start();
             Topmost = true;
         }
-        
+
         //tick every 120 millisecs
         private void Tick(object sender, EventArgs e)
         {
+            Debug.Content = "X:" + trans.X + "\nY: "+trans.Y + "\n" +
+                "\nMode: " + mode + "\n" +
+                "\nWindow:\nX: " + Screen.ActualWidth + "\nY: " + Screen.ActualHeight;
             movetimer++;
             changetimer++;
             if (changetimer > random.Next(250, 350))
@@ -99,10 +106,11 @@ namespace Tetracosm_appreciation
         {
             if (movetimer >= 53)
             {
-                framecount = 4;
-                animname = "fly";
-                slowmo = 1;
                 movetimer = 0;
+                framecount = 4;
+                slowmo = 1;
+                animname = "fly";
+                
                 int current_x = (int)Character.RenderTransform.Value.OffsetX;
                 int current_y = (int)Character.RenderTransform.Value.OffsetY;
                 next_y = random.Next((int)ActualHeight - 100);
@@ -141,8 +149,8 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer >= 100)
                 {
-                    animname = "stand";
                     movetimer = 0;
+                    animname = "stand";
                     framecount = 5;
                     slowmo = 3;
                 }
@@ -151,8 +159,8 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer == 50)
                 {
-                    animname = "fly";
                     slowmo = 1;
+                    animname = "fly";
                     int current_x = (int)Character.RenderTransform.Value.OffsetX;
                     int current_y = (int)Character.RenderTransform.Value.OffsetY;
                     next_y = (int)ActualHeight - 75;
@@ -191,9 +199,9 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer >= 100)
                 {
-                    animname = "sing";
                     movetimer = 0;
                     framecount = 3;
+                    animname = "sing";
                     slowmo = 2;
                 }
             }
@@ -201,8 +209,8 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer == 50)
                 {
-                    animname = "fly";
                     slowmo = 1;
+                    animname = "fly";
                     int current_x = (int)Character.RenderTransform.Value.OffsetX;
                     int current_y = (int)Character.RenderTransform.Value.OffsetY;
                     next_y = (int)ActualHeight - 75;
@@ -241,9 +249,9 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer >= 100)
                 {
-                    animname = "sleep";
                     movetimer = 0;
                     framecount = 1;
+                    animname = "sleep";
                     slowmo = 3;
                 }
             }
@@ -251,8 +259,8 @@ namespace Tetracosm_appreciation
             {
                 if (movetimer == 50)
                 {
-                    animname = "fly";
                     slowmo = 1;
+                    animname = "fly";
                     int current_x = (int)Character.RenderTransform.Value.OffsetX;
                     int current_y = (int)Character.RenderTransform.Value.OffsetY;
                     next_y = (int)ActualHeight - 75;
@@ -301,6 +309,24 @@ namespace Tetracosm_appreciation
             {
                 frame = 1;
             }
+        }
+        private void ToggleDebug(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.RightCtrl)
+            {
+                if (debugOpen)
+                {
+                    Debug.Visibility = Visibility.Hidden;
+                    debugOpen = false;
+                }
+                else
+                {
+                    Debug.Visibility = Visibility.Visible;
+                    debugOpen = true;
+                }
+                
+            }
+            
         }
     }
 }
