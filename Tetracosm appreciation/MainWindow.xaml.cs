@@ -145,15 +145,28 @@ namespace Tetracosm_appreciation
         private void sit()
         {
             
-            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 120)
             {
-                if (movetimer >= 100)
+                next_y = (int)ActualHeight - 75;
+                DoubleAnimation anim1 = new DoubleAnimation
                 {
-                    movetimer = 0;
-                    animname = "stand";
-                    framecount = 5;
-                    slowmo = 3;
-                }
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = Character.RenderTransform.Value.OffsetX,
+                    Duration = TimeSpan.FromSeconds(0.1),
+                };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_y,
+                    Duration = TimeSpan.FromSeconds(0.1),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseIn, Exponent = 1 }
+                };
+                trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                movetimer = 0;
+                animname = "stand";
+                framecount = 5;
+                slowmo = 3;
             }
             else
             {
@@ -245,15 +258,28 @@ namespace Tetracosm_appreciation
         //perch on the bottom of the screen and lie down
         private void sleep()
         {
-            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 100)
             {
-                if (movetimer >= 100)
+                next_y = (int)ActualHeight - 75;
+                DoubleAnimation anim1 = new DoubleAnimation
                 {
-                    movetimer = 0;
-                    framecount = 1;
-                    animname = "sleep";
-                    slowmo = 3;
-                }
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = Character.RenderTransform.Value.OffsetX,
+                    Duration = TimeSpan.FromSeconds(0.1),
+                };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_y,
+                    Duration = TimeSpan.FromSeconds(0.1),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseIn, Exponent = 1 }
+                };
+                trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                movetimer = 0;
+                framecount = 1;
+                animname = "sleep";
+                slowmo = 3;
             }
             else
             {
