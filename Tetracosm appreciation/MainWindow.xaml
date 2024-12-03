@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tetracosm_appreciation"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize" WindowState="Maximized" WindowStyle="None" Background="#00000000" AllowsTransparency="True" Topmost="True" Top="0" Left="0" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Disabled" Focusable="False">
+        Title="MainWindow" Height="450" Width="800" ResizeMode="NoResize" WindowState="Maximized" WindowStyle="None" Background="#00000000" AllowsTransparency="True" Topmost="True" Top="0" Left="0" HorizontalAlignment="Left" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Disabled" Focusable="False" Icon="/Images/Sleep-Frame-1.png">
     <Grid>
         <Image RenderOptions.BitmapScalingMode="NearestNeighbor" x:Name="Character" Height="100" Width="100" Source="/Animations/Fly-Frame-1.png" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
             <Image.RenderTransform>

@@ -32,7 +32,7 @@ namespace Tetracosm_appreciation
         int movetimer = 45;
 
         //modechange
-        string[] modes = { "fly", "hover", "sit", "rest", "sleep"};
+        string[] modes = { "fly", "sit", "sleep"};
         string mode = "fly";
         int changetimer = 0;
 
@@ -40,6 +40,7 @@ namespace Tetracosm_appreciation
         int framecount = 4;
         int frame = 1;
         string animname = "fly";
+        int slowmo = 1;
 
         //startup
         public MainWindow()
@@ -55,64 +56,52 @@ namespace Tetracosm_appreciation
             Main.Start();
             Topmost = true;
         }
-
-        //keeping it on top
-        /*private void Screen_Deactivated(object sender, EventArgs e)
-        {
-            Topmost = true;
-            Activate();
-        }*/
         
         //tick every 120 millisecs
         private void Tick(object sender, EventArgs e)
         {
             movetimer++;
             changetimer++;
-            /*if (changetimer>random.Next(150,250))
-                mode = modes[random.Next(0,modes.Length)];*/
-
+            if (changetimer > random.Next(250, 350))
+            {
+                mode = modes[random.Next(0, modes.Length)];
+                changetimer = 0;
+            }
+               
             switch (mode)
             {
                 case "fly":
-                    animname = "fly";
                     fly();
                     break;
                 case "sit":
-                    animname = "stand";
                     sit();
                     break;
-                case "rest":
-                    animname = "rest";
-                    rest();
+                case "sing":
+                    sing();
                     break;
                 case "sleep":
-                    animname = "sleep";
                     sleep();
                     break;
                 case "hover":
+                    framecount = 4;
                     animname = "fly";
                     hover();
                     break;
                 default:
-                    animname = "fly";
                     fly();
                     break;
             }
-
-            Character.Source = new BitmapImage(new Uri(@"/Tetracosm appreciation;component/Images/" + animname + "-Frame-" + frame + ".png", UriKind.Relative));
-            frame++;
-            if (frame>framecount)
-            {
-                frame = 1;
-            }
-            
+            animate();
         }
 
         //flying around randomly
         private void fly()
         {
-            if (movetimer >= 50)
+            if (movetimer >= 53)
             {
+                framecount = 4;
+                animname = "fly";
+                slowmo = 1;
                 movetimer = 0;
                 int current_x = (int)Character.RenderTransform.Value.OffsetX;
                 int current_y = (int)Character.RenderTransform.Value.OffsetY;
@@ -144,25 +133,174 @@ namespace Tetracosm_appreciation
                 trans.BeginAnimation(TranslateTransform.YProperty, anim2);
             }
         }
-
+        //perch on the bottom of the screen
         private void sit()
         {
-
+            
+            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            {
+                if (movetimer >= 100)
+                {
+                    animname = "stand";
+                    movetimer = 0;
+                    framecount = 5;
+                    slowmo = 3;
+                }
+            }
+            else
+            {
+                if (movetimer == 50)
+                {
+                    animname = "fly";
+                    slowmo = 1;
+                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                    next_y = (int)ActualHeight - 75;
+                    next_x = random.Next((int)ActualWidth - 100);
+                    DoubleAnimation anim1 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetX,
+                        To = next_x,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                    };
+                    DoubleAnimation anim2 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetY,
+                        To = next_y,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                    };
+                    if (current_x < next_x)
+                    {
+                        scale.ScaleX = 1;
+                    }
+                    else
+                    {
+                        scale.ScaleX = -1;
+                    }
+                    trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                    trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                }
+            }
         }
-
-        private void rest()
+        //perch on the bottom of the screen andd start singing (missing particles for notes)
+        private void sing()
         {
-
+            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            {
+                if (movetimer >= 100)
+                {
+                    animname = "sing";
+                    movetimer = 0;
+                    framecount = 3;
+                    slowmo = 2;
+                }
+            }
+            else
+            {
+                if (movetimer == 50)
+                {
+                    animname = "fly";
+                    slowmo = 1;
+                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                    next_y = (int)ActualHeight - 75;
+                    next_x = random.Next((int)ActualWidth - 100);
+                    DoubleAnimation anim1 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetX,
+                        To = next_x,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                    };
+                    DoubleAnimation anim2 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetY,
+                        To = next_y,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                    };
+                    if (current_x < next_x)
+                    {
+                        scale.ScaleX = 1;
+                    }
+                    else
+                    {
+                        scale.ScaleX = -1;
+                    }
+                    trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                    trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                }
+            }
         }
-
+        //perch on the bottom of the screen and lie down
         private void sleep()
         {
-
+            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            {
+                if (movetimer >= 100)
+                {
+                    animname = "sleep";
+                    movetimer = 0;
+                    framecount = 1;
+                    slowmo = 3;
+                }
+            }
+            else
+            {
+                if (movetimer == 50)
+                {
+                    animname = "fly";
+                    slowmo = 1;
+                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                    next_y = (int)ActualHeight - 75;
+                    next_x = random.Next((int)ActualWidth - 100);
+                    DoubleAnimation anim1 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetX,
+                        To = next_x,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                    };
+                    DoubleAnimation anim2 = new DoubleAnimation
+                    {
+                        From = Character.RenderTransform.Value.OffsetY,
+                        To = next_y,
+                        Duration = TimeSpan.FromSeconds(8),
+                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                    };
+                    if (current_x < next_x)
+                    {
+                        scale.ScaleX = 1;
+                    }
+                    else
+                    {
+                        scale.ScaleX = -1;
+                    }
+                    trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                    trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                }
+            }
         }
-
+        //stop in a spot randomly
         private void hover()
         {
-
+            
+        }
+        //animation
+        private void animate()
+        {
+            if (frame % slowmo == 0)
+            {
+                Character.Source = new BitmapImage(new Uri(@"/Tetracosm appreciation;component/Images/" + animname + "-Frame-" + frame / slowmo + ".png", UriKind.Relative));
+            }
+            frame++;
+            if (frame > framecount * slowmo)
+            {
+                frame = 1;
+            }
         }
     }
 }
