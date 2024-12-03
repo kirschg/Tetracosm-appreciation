@@ -157,7 +157,7 @@ namespace Tetracosm_appreciation
             }
             else
             {
-                if (movetimer == 50)
+                if (movetimer % 50 == 0)
                 {
                     slowmo = 1;
                     animname = "fly";
@@ -257,7 +257,7 @@ namespace Tetracosm_appreciation
             }
             else
             {
-                if (movetimer == 50)
+                if (movetimer % 50 == 0)
                 {
                     slowmo = 1;
                     animname = "fly";
