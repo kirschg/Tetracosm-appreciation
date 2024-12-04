@@ -40,6 +40,7 @@ namespace Tetracosm_appreciation
         //animation
         int framecount = 4;
         int frame = 1;
+        string prevanim = "fly";
         string animname = "fly";
         int slowmo = 1;
 
@@ -74,6 +75,8 @@ namespace Tetracosm_appreciation
                 mode = modes[random.Next(0, modes.Length)];
                 changetimer = 0;
             }
+
+            prevanim = animname;
                
             switch (mode)
             {
@@ -326,6 +329,10 @@ namespace Tetracosm_appreciation
         //animation
         private void animate()
         {
+            if (prevanim != animname)
+            {
+                frame = 1;
+            }
             if (frame % slowmo == 0)
             {
                 Character.Source = new BitmapImage(new Uri(@"/Tetracosm appreciation;component/Images/" + animname + "-Frame-" + frame / slowmo + ".png", UriKind.Relative));
