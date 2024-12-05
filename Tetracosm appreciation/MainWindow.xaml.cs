@@ -33,7 +33,7 @@ namespace Tetracosm_appreciation
         int movetimer = 45;
 
         //modechange
-        string[] modes = { "fly", "sit", "sleep"};
+        string[] modes = { "fly", "sit", "sleep", "hover"};
         string mode = "fly";
         int changetimer = 0;
 
@@ -51,6 +51,10 @@ namespace Tetracosm_appreciation
         public MainWindow()
         {
             InitializeComponent();
+            PlayArea.Height = SystemParameters.VirtualScreenHeight - 1;
+            PlayArea.Width = SystemParameters.VirtualScreenWidth;
+            Left = SystemParameters.VirtualScreenLeft;
+            Top = SystemParameters.VirtualScreenTop;
             trans.X = -120;
             trans.Y = random.Next(-100, 1200);
             Character.RenderTransform = trans;
@@ -67,10 +71,10 @@ namespace Tetracosm_appreciation
         {
             Debug.Content = "X:" + trans.X + "\nY: "+trans.Y + "\n" +
                 "\nMode: " + mode + "\n" +
-                "\nWindow:\nX: " + Screen.ActualWidth + "\nY: " + Screen.ActualHeight;
+                "\nWindow:\nX: " + PlayArea.ActualWidth + "\nY: " + PlayArea.ActualHeight;
             movetimer++;
             changetimer++;
-            if (changetimer > random.Next(250, 350))
+            if (changetimer > random.Next(250, 550))
             {
                 mode = modes[random.Next(0, modes.Length)];
                 changetimer = 0;
@@ -93,8 +97,6 @@ namespace Tetracosm_appreciation
                     sleep();
                     break;
                 case "hover":
-                    framecount = 4;
-                    animname = "fly";
                     hover();
                     break;
                 default:
@@ -107,7 +109,7 @@ namespace Tetracosm_appreciation
         //flying around randomly
         private void fly()
         {
-            if (movetimer >= 53)
+            if (movetimer >= 65)
             {
                 movetimer = 0;
                 framecount = 4;
@@ -116,22 +118,24 @@ namespace Tetracosm_appreciation
                 
                 int current_x = (int)Character.RenderTransform.Value.OffsetX;
                 int current_y = (int)Character.RenderTransform.Value.OffsetY;
-                next_y = random.Next((int)ActualHeight - 100);
-                next_x = random.Next((int)ActualWidth - 100);
+
+                next_y = random.Next((int)ActualHeight);
+                next_x = random.Next((int)ActualWidth);
+
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetX,
                     To = next_x,
-                    Duration = TimeSpan.FromSeconds(8),
+                    Duration = TimeSpan.FromSeconds(10),
                     EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
                 };
                 DoubleAnimation anim2 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetY,
                     To = next_y,
-                    Duration = TimeSpan.FromSeconds(8),
+                    Duration = TimeSpan.FromSeconds(10),
                     EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
-                }; ;
+                };
                 if (current_x < next_x)
                 {
                     scale.ScaleX = 1;
@@ -148,9 +152,9 @@ namespace Tetracosm_appreciation
         private void sit()
         {
             
-            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 120)
+            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 140)
             {
-                next_y = (int)ActualHeight - 75;
+                next_y = (int)ActualHeight - 74;
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetX,
@@ -171,41 +175,47 @@ namespace Tetracosm_appreciation
                 framecount = 5;
                 slowmo = 3;
             }
-            else
+            else if(movetimer >= 45)
             {
-                if (movetimer % 50 == 0)
+                movetimer = 0;
+                framecount = 4;
+                slowmo = 1;
+                animname = "fly";
+
+                int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+
+                next_y = (int)ActualHeight - 100;
+                next_x = random.Next(current_x - 500, current_x + 500);
+                if (next_x > (int)ActualWidth - 100)
+                    next_x = (int)ActualWidth - 100;
+                if (next_x < 0)
+                    next_x = 0;
+
+                DoubleAnimation anim1 = new DoubleAnimation
                 {
-                    slowmo = 1;
-                    animname = "fly";
-                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
-                    next_y = (int)ActualHeight - 75;
-                    next_x = random.Next((int)ActualWidth - 100);
-                    DoubleAnimation anim1 = new DoubleAnimation
-                    {
-                        From = Character.RenderTransform.Value.OffsetX,
-                        To = next_x,
-                        Duration = TimeSpan.FromSeconds(8),
-                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
-                    };
-                    DoubleAnimation anim2 = new DoubleAnimation
-                    {
-                        From = Character.RenderTransform.Value.OffsetY,
-                        To = next_y,
-                        Duration = TimeSpan.FromSeconds(8),
-                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
-                    };
-                    if (current_x < next_x)
-                    {
-                        scale.ScaleX = 1;
-                    }
-                    else
-                    {
-                        scale.ScaleX = -1;
-                    }
-                    trans.BeginAnimation(TranslateTransform.XProperty, anim1);
-                    trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = next_x,
+                    Duration = TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_y,
+                    Duration = TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                };
+                if (current_x < next_x)
+                {
+                    scale.ScaleX = 1;
                 }
+                else
+                {
+                    scale.ScaleX = -1;
+                }
+                trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                trans.BeginAnimation(TranslateTransform.YProperty, anim2);
             }
         }
         //perch on the bottom of the screen andd start singing (missing particles for notes)
@@ -261,9 +271,9 @@ namespace Tetracosm_appreciation
         //perch on the bottom of the screen and lie down
         private void sleep()
         {
-            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 100)
+            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 120)
             {
-                next_y = (int)ActualHeight - 75;
+                next_y = (int)ActualHeight - 74;
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetX,
@@ -284,47 +294,100 @@ namespace Tetracosm_appreciation
                 animname = "sleep";
                 slowmo = 3;
             }
-            else
+            else if (movetimer >= 45)
             {
-                if (movetimer % 50 == 0)
+                movetimer = 0;
+                framecount = 4;
+                slowmo = 1;
+                animname = "fly";
+
+                int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+
+                next_y = (int)ActualHeight - 100;
+                next_x = random.Next(current_x - 500, current_x + 500);
+
+                if (next_x > (int)ActualWidth - 100)
+                    next_x = (int)ActualWidth - 100;
+                if (next_x < 0)
+                    next_x = 0;
+
+                DoubleAnimation anim1 = new DoubleAnimation
                 {
-                    slowmo = 1;
-                    animname = "fly";
-                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
-                    next_y = (int)ActualHeight - 75;
-                    next_x = random.Next((int)ActualWidth - 100);
-                    DoubleAnimation anim1 = new DoubleAnimation
-                    {
-                        From = Character.RenderTransform.Value.OffsetX,
-                        To = next_x,
-                        Duration = TimeSpan.FromSeconds(8),
-                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
-                    };
-                    DoubleAnimation anim2 = new DoubleAnimation
-                    {
-                        From = Character.RenderTransform.Value.OffsetY,
-                        To = next_y,
-                        Duration = TimeSpan.FromSeconds(8),
-                        EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
-                    };
-                    if (current_x < next_x)
-                    {
-                        scale.ScaleX = 1;
-                    }
-                    else
-                    {
-                        scale.ScaleX = -1;
-                    }
-                    trans.BeginAnimation(TranslateTransform.XProperty, anim1);
-                    trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = next_x,
+                    Duration = TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_y,
+                    Duration = TimeSpan.FromSeconds(6),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                };
+                if (current_x < next_x)
+                {
+                    scale.ScaleX = 1;
                 }
+                else
+                {
+                    scale.ScaleX = -1;
+                }
+                trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                trans.BeginAnimation(TranslateTransform.YProperty, anim2);
             }
         }
         //stop in a spot randomly
         private void hover()
         {
-            
+            if (movetimer >= 30)
+            {
+                movetimer = 0;
+                framecount = 4;
+                slowmo = 1;
+                animname = "fly";
+
+                int current_x = (int)Character.RenderTransform.Value.OffsetX;
+                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+
+                next_y = random.Next(current_y - 400, current_y + 400);
+                next_x = random.Next(current_x - 400, current_x + 400);
+
+                if (next_y > (int)ActualHeight - 100)
+                    next_y = (int)ActualHeight - 100;
+                if (next_y < 0)
+                    next_y = 0;
+                if (next_x > (int)ActualWidth - 100)
+                    next_x = (int)ActualWidth - 100;
+                if (next_x < 0)
+                    next_x = 0;
+
+                DoubleAnimation anim1 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetX,
+                    To = next_x,
+                    Duration = TimeSpan.FromSeconds(5),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseInOut, Exponent = 3 }
+                };
+                DoubleAnimation anim2 = new DoubleAnimation
+                {
+                    From = Character.RenderTransform.Value.OffsetY,
+                    To = next_y,
+                    Duration = TimeSpan.FromSeconds(5),
+                    EasingFunction = new ExponentialEase { EasingMode = EasingMode.EaseOut, Exponent = 1 }
+                };
+                if (current_x < next_x)
+                {
+                    scale.ScaleX = 1;
+                }
+                else
+                {
+                    scale.ScaleX = -1;
+                }
+                trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+                trans.BeginAnimation(TranslateTransform.YProperty, anim2);
+            }
         }
         //animation
         private void animate()
