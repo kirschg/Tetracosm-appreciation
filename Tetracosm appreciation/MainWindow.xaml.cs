@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,21 +29,21 @@ namespace Tetracosm_appreciation
         TranslateTransform trans = new TranslateTransform();
 
         //movement
-        int next_y = 0;
-        int next_x = 0;
-        int movetimer = 45;
+        short next_y = 0;
+        short next_x = 0;
+        byte movetimer = 45;
 
         //modechange
         string[] modes = { "fly", "sit", "sleep", "hover"};
         string mode = "fly";
-        int changetimer = 0;
+        short changetimer = 0;
 
         //animation
-        int framecount = 4;
-        int frame = 1;
+        byte framecount = 4;
+        byte frame = 1;
         string prevanim = "fly";
         string animname = "fly";
-        int slowmo = 1;
+        byte slowmo = 1;
 
         //debug toggle
         bool debugOpen = false;
@@ -55,8 +56,16 @@ namespace Tetracosm_appreciation
             PlayArea.Width = SystemParameters.VirtualScreenWidth;
             Left = SystemParameters.VirtualScreenLeft;
             Top = SystemParameters.VirtualScreenTop;
-            trans.X = -120;
-            trans.Y = random.Next(-100, 1200);
+            if (random.Next(10)>5)
+            {
+                trans.X = random.Next((short)Width, (short)Width + 75);
+            }
+            else
+            {
+                trans.X = random.Next(100,175)*-1;
+            }
+            
+            trans.Y = random.Next((short)Height-100);
             Character.RenderTransform = trans;
             Character.LayoutTransform = scale;
             System.Windows.Threading.DispatcherTimer Main = new System.Windows.Threading.DispatcherTimer();
@@ -116,11 +125,11 @@ namespace Tetracosm_appreciation
                 slowmo = 1;
                 animname = "fly";
                 
-                int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                short current_x = (short)Character.RenderTransform.Value.OffsetX;
+                short current_y = (short)Character.RenderTransform.Value.OffsetY;
 
-                next_y = random.Next((int)ActualHeight);
-                next_x = random.Next((int)ActualWidth);
+                next_y = (short)random.Next((int)ActualHeight-100);
+                next_x = (short)random.Next((int)ActualWidth-100);
 
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
@@ -152,9 +161,9 @@ namespace Tetracosm_appreciation
         private void sit()
         {
             
-            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 140)
+            if (trans.Y <= (short)ActualHeight - 74 && trans.Y >= (short)ActualHeight - 140)
             {
-                next_y = (int)ActualHeight - 74;
+                next_y = (short)((int)ActualHeight - 74);
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetX,
@@ -182,13 +191,13 @@ namespace Tetracosm_appreciation
                 slowmo = 1;
                 animname = "fly";
 
-                int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                short current_x = (short)Character.RenderTransform.Value.OffsetX;
+                short current_y = (short)Character.RenderTransform.Value.OffsetY;
 
-                next_y = (int)ActualHeight - 100;
-                next_x = random.Next(current_x - 500, current_x + 500);
-                if (next_x > (int)ActualWidth - 100)
-                    next_x = (int)ActualWidth - 100;
+                next_y = (short)((int)ActualHeight - 100);
+                next_x = (short)random.Next(current_x - 500, current_x + 500);
+                if (next_x > (short)ActualWidth - 100)
+                    next_x = (short)((int)ActualWidth - 100);
                 if (next_x < 0)
                     next_x = 0;
 
@@ -221,7 +230,7 @@ namespace Tetracosm_appreciation
         //perch on the bottom of the screen andd start singing (missing particles for notes)
         private void sing()
         {
-            if ((int)Character.RenderTransform.Value.OffsetY == (int)ActualHeight - 75)
+            if ((short)Character.RenderTransform.Value.OffsetY == (short)ActualHeight - 75)
             {
                 if (movetimer >= 100)
                 {
@@ -237,10 +246,10 @@ namespace Tetracosm_appreciation
                 {
                     slowmo = 1;
                     animname = "fly";
-                    int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                    int current_y = (int)Character.RenderTransform.Value.OffsetY;
-                    next_y = (int)ActualHeight - 75;
-                    next_x = random.Next((int)ActualWidth - 100);
+                    short current_x = (short)Character.RenderTransform.Value.OffsetX;
+                    short current_y = (short)Character.RenderTransform.Value.OffsetY;
+                    next_y = (short)((int)ActualHeight - 75);
+                    next_x = (short)random.Next((int)ActualWidth - 100);
                     DoubleAnimation anim1 = new DoubleAnimation
                     {
                         From = Character.RenderTransform.Value.OffsetX,
@@ -271,9 +280,9 @@ namespace Tetracosm_appreciation
         //perch on the bottom of the screen and lie down
         private void sleep()
         {
-            if (trans.Y <= (int)ActualHeight - 74 && trans.Y >= (int)ActualHeight - 120)
+            if (trans.Y <= (short)ActualHeight - 74 && trans.Y >= (short)ActualHeight - 120)
             {
-                next_y = (int)ActualHeight - 74;
+                next_y = (short)((int)ActualHeight - 74);
                 DoubleAnimation anim1 = new DoubleAnimation
                 {
                     From = Character.RenderTransform.Value.OffsetX,
@@ -301,14 +310,14 @@ namespace Tetracosm_appreciation
                 slowmo = 1;
                 animname = "fly";
 
-                int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                short current_x = (short)Character.RenderTransform.Value.OffsetX;
+                short current_y = (short)Character.RenderTransform.Value.OffsetY;
 
-                next_y = (int)ActualHeight - 100;
-                next_x = random.Next(current_x - 500, current_x + 500);
+                next_y = (short)((int)ActualHeight - 100);
+                next_x = (short)random.Next(current_x - 500, current_x + 500);
 
-                if (next_x > (int)ActualWidth - 100)
-                    next_x = (int)ActualWidth - 100;
+                if (next_x > (short)ActualWidth - 100)
+                    next_x = (short)((int)ActualWidth - 100);
                 if (next_x < 0)
                     next_x = 0;
 
@@ -348,18 +357,18 @@ namespace Tetracosm_appreciation
                 slowmo = 1;
                 animname = "fly";
 
-                int current_x = (int)Character.RenderTransform.Value.OffsetX;
-                int current_y = (int)Character.RenderTransform.Value.OffsetY;
+                short current_x = (short)Character.RenderTransform.Value.OffsetX;
+                short current_y = (short)Character.RenderTransform.Value.OffsetY;
 
-                next_y = random.Next(current_y - 400, current_y + 400);
-                next_x = random.Next(current_x - 400, current_x + 400);
+                next_y = (short)random.Next(current_y - 400, current_y + 400);
+                next_x = (short)random.Next(current_x - 400, current_x + 400);
 
-                if (next_y > (int)ActualHeight - 100)
-                    next_y = (int)ActualHeight - 100;
+                if (next_y > (short)ActualHeight - 100)
+                    next_y = (short)((int)ActualHeight - 100);
                 if (next_y < 0)
                     next_y = 0;
-                if (next_x > (int)ActualWidth - 100)
-                    next_x = (int)ActualWidth - 100;
+                if (next_x > (short)ActualWidth - 100)
+                    next_x = (short)((int)ActualWidth - 100);
                 if (next_x < 0)
                     next_x = 0;
 
