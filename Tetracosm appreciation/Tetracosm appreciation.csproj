@@ -107,11 +107,11 @@
     <Resource Include="Images\Rest-Frame-2.png" />
     <Resource Include="Images\Rest-Frame-3.png" />
     <Resource Include="Images\Sleep-Frame-1.png" />
-    <Resource Include="Images\Stand-Frame-1.png" />
-    <Resource Include="Images\Stand-Frame-2.png" />
-    <Resource Include="Images\Stand-Frame-3.png" />
-    <Resource Include="Images\Stand-Frame-4.png" />
-    <Resource Include="Images\Stand-Frame-5.png" />
+    <Resource Include="Images\Sit-Frame-1.png" />
+    <Resource Include="Images\Sit-Frame-2.png" />
+    <Resource Include="Images\Sit-Frame-3.png" />
+    <Resource Include="Images\Sit-Frame-4.png" />
+    <Resource Include="Images\Sit-Frame-5.png" />
     <Resource Include="Images\Stunned-Frame-1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
